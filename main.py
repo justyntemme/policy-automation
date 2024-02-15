@@ -233,8 +233,11 @@ def main():
     )
     if pcData[0] != 200:
         exit()
-    # print(pcData[1])
-    pcData = modify_and_query(pcData[1], compliance_metadata)
+    pcDataJsonArray = modify_and_query(pcData[1], compliance_metadata)
+
+    for item in pcDataJsonArray:
+        # request = make_request()
+        print(item)
 
 
 if __name__ == "__main__":
