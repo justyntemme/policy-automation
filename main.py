@@ -197,12 +197,14 @@ def modify_and_query(data, new_metadata):
     :param new_metadata: The additional metadata object to be inserted.
     """
     json_data = json.loads(data)  # Iterate through each JSON object in the response
+    new_json_objects = []
     for item in json_data:
         # Check if 'complianceMetadata' exists, and if not, create it as an empty list
         if "complianceMetadata" not in item:
             item["complianceMetadata"] = []
-            item["complianceMetadata"].append(new_metadata)
-    # TODO create update query
+        item["complianceMetadata"].append(new_metadata)
+        new_json_objects.append(item)
+    return new_json_objects
 
 
 def main():
