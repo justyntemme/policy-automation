@@ -237,7 +237,17 @@ def main():
 
     for item in pcDataJsonArray:
         # request = make_request()
-        print(item)
+        id = item["policyId"]
+        r = make_request(
+            f"https://api0.prismacloud.io/policy/{id}",
+            "v1",
+            pcToken[1]["token"],
+            "application/json",
+            "PUT",
+            item,
+        )
+        if r[0] != 200:
+            print(r[0])
 
 
 if __name__ == "__main__":
