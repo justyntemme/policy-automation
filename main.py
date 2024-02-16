@@ -196,15 +196,25 @@ def modify_and_query(data, new_metadata):
     :param data: The original list of JSON objects.
     :param new_metadata: The additional metadata object to be inserted.
     """
+
     json_data = json.loads(data)  # Iterate through each JSON object in the response
     new_json_objects = []
+    ibreak = False
     for item in json_data:
-        # Check if 'complianceMetadata' exists, and if not, create it as an empty list
+        ibreak = False
         if "complianceMetadata" not in item:
             item["complianceMetadata"] = []
-        item["complianceMetadata"].append(new_metadata)
-        new_json_objects.append(item)
-    return new_json_objects
+         #rheck if 'complianceMetadata' exists, and if not, create it as an empty list
+        for obj in item["complianceMetadata"]: 
+            if obj["standardId"] == "3caf75b3-dac3-4412-96ce-4ffc2a6b3e48":
+                ibreak = True
+       
+        if ibreak != True:
+           item["complianceMetadata"].append(new_metadata)
+           new_json_objects.append(item)
+           return new_json_objects
+        else:
+            logging.error("metaData already found")
 
 
 def main():
@@ -233,13 +243,17 @@ def main():
     )
     if pcData[0] != 200:
         exit()
-    pcDataJsonArray = modify_and_query(pcData[1], compliance_metadata)
 
+    pcDataJsonArray = modify_and_query(pcData[1], compliance_metadata)
+    if pcDataJsonArray == None:
+        logging.info("no additional appends needed, policy already contains metadata for standard")
+        exit()
+    
     for item in pcDataJsonArray:
-        # request = make_request()
-        id = item["policyId"]
+        compliance_metadata["policyId"] = item["policyId"]
+        policy_id = item["policyId"]
         r = make_request(
-            f"https://api0.prismacloud.io/policy/{id}",
+            f"https://api0.prismacloud.io/policy/{policy_id}",
             "v1",
             pcToken[1]["token"],
             "application/json",
