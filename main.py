@@ -214,7 +214,7 @@ def modify_and_query(data, new_metadata):
            new_json_objects.append(item)
            return new_json_objects
         else:
-            logging.error("metaData already found")
+            logging.info("metaData already found")
 
 
 def main():
@@ -250,6 +250,7 @@ def main():
         exit()
     
     for item in pcDataJsonArray:
+        print(item)
         compliance_metadata["policyId"] = item["policyId"]
         policy_id = item["policyId"]
         r = make_request(
