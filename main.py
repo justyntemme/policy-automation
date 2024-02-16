@@ -221,6 +221,8 @@ def main():
     args = parse_arguments()
     accessKey = os.environ.get("PC_IDENTITY")
     accessSecret = os.environ.get("PC_SECRET")
+    # Change args.url in order to specify the correct cspm endpoint (app1,app2,app2) and change the label 
+    # used to query for policies
     args.url = "https://api0.prismacloud.io/policy?policy.label=marclabel"
 
     if not all([accessKey, accessSecret]):
